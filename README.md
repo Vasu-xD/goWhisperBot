@@ -5,7 +5,7 @@ Go version of [rojserbest/ezWhisperBot](https://github.com/rojserbest/ezWhisperB
 ### Requirements
 
 - Golang
-- A A Telegram bot created with [@BotFather](https://t.me/BotFather)
+- A Telegram bot created with [@BotFather](https://t.me/BotFather)
     with "inline mode" and "inline feedback" enabled
 
 ### Run the bot
