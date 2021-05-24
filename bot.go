@@ -19,7 +19,6 @@
 package main
 
 import (
-	"context"
 	"net/http"
 	"os"
 
@@ -28,7 +27,6 @@ import (
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
-	"github.com/thecodeteam/goodbye"
 )
 
 func main() {
@@ -52,10 +50,6 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
-	goodbye.Register(func(ctx context.Context, sig os.Signal) {
-		whispers.SaveWhispers()
-	})
 
 	whispers.InitWhispers()
 	updater.Idle()

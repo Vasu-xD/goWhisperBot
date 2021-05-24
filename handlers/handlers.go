@@ -26,6 +26,7 @@ import (
 
 func AddHandlers(dp *ext.Dispatcher) {
 	dp.AddHandler(handlers.NewCommand("start", start))
+	dp.AddHandler(handlers.NewCommand("save", saveWhispers))
 	dp.AddHandler(handlers.NewCallback(filters.Equal("start"), back))
 	dp.AddHandler(handlers.NewCallback(filters.Equal("learn_next"), back))
 	dp.AddHandler(handlers.NewCallback(filters.Equal("show_whisper"), showWhisper))

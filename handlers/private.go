@@ -19,6 +19,9 @@
 package handlers
 
 import (
+	"os"
+
+	"goWhisperBot/whispers"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -112,5 +115,14 @@ func back(b *gotgbot.Bot, ctx *ext.Context) error {
 		)
 	}
 
+	return nil
+}
+
+func saveWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
+	if strings.EqualFold(ctx.EffectiveMessage.From.Username, os.Getenv("SUDO")) {
+		return nil
+	}
+
+	whispers.SaveWhispers()
 	return nil
 }
