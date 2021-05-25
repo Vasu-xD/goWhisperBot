@@ -202,7 +202,9 @@ func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 		ctx.EffectiveMessage.EditText(
 			b,
 			"Your whispers has been removed at "+now,
-			nil,
+			&gotgbot.EditMessageTextOpts{
+				ReplyMarkup: *ctx.EffectiveMessage.ReplyMarkup,
+			},
 		)
 	}
 
