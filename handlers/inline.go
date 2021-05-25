@@ -38,9 +38,8 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 					Id:    uuid.NewV4().String(),
 					Title: "🔥 Write a whisper message",
 					InputMessageContent: gotgbot.InputTextMessageContent{
-						MessageText: "<b>Send whisper messages through inline mode</b>\n\n" +
-							fmt.Sprintf("Usage: <code>@%s [@username] text</code>", b.User.Username),
-						ParseMode: "HTML",
+						MessageText: fmt.Sprintf("<b>Send whisper messages through inline mode</b>\n\nUsage: <code>@%s [@username] text</code>", b.User.Username),
+						ParseMode:   "HTML",
 					},
 					Description: fmt.Sprintf("Usage: @%s [@username] text", b.User.Username),
 					ThumbUrl:    "https://www.freeiconspng.com/uploads/whisper-icon-0.png",
@@ -99,9 +98,9 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 			[]gotgbot.InlineQueryResult{
 				gotgbot.InlineQueryResultArticle{
 					Id:    uuid.NewV4().String(),
-					Title: "🔒 A whisper message to @" + username,
+					Title: fmt.Sprintf("🔒 A whisper message to @%s", username),
 					InputMessageContent: gotgbot.InputTextMessageContent{
-						MessageText: "🔒 A whisper message to @" + username,
+						MessageText: fmt.Sprintf("🔒 A whisper message to @%s", username),
 					},
 					Description: text,
 					ReplyMarkup: &gotgbot.InlineKeyboardMarkup{
