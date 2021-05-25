@@ -77,7 +77,7 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 					InputMessageContent: gotgbot.InputTextMessageContent{
 						MessageText: "👁️ The first one who open the whisper can read it",
 					},
-					Description: "🤫 " + text,
+					Description: fmt.Sprintf("🤫 %s", text),
 					ReplyMarkup: &gotgbot.InlineKeyboardMarkup{
 						InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
 							{
