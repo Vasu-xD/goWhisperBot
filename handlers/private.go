@@ -19,7 +19,9 @@
 package handlers
 
 import (
+	"fmt"
 	"os"
+	"time"
 
 	"goWhisperBot/whispers"
 	"strings"
@@ -124,5 +126,85 @@ func saveWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 	}
 
 	whispers.SaveWhispers()
+	return nil
+}
+
+func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
+	_whispers, text := []whispers.Whisper{}, ""
+
+	for _, whisper := range whispers.Whispers.Whispers {
+		if whisper.Sender == ctx.EffectiveUser.Id {
+			_whispers = append(_whispers, whisper)
+		}
+	}
+
+	if len(_whispers) == 0 {
+		text = "You don't have any whispers"
+	} else {
+		text = fmt.Sprintf("You have %d whispers", len(_whispers))
+	}
+
+	ctx.EffectiveMessage.EditText(
+		b,
+		text,
+		&gotgbot.EditMessageTextOpts{
+			ReplyMarkup: gotgbot.InlineKeyboardMarkup{
+				InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+					{
+						gotgbot.InlineKeyboardButton{
+							Text:         "🗑 Delete My Whispers",
+							CallbackData: "delete_my_whispers",
+						},
+					},
+					{
+						gotgbot.InlineKeyboardButton{
+							Text:         "◀️ Back to Main Page",
+							CallbackData: "start",
+						},
+					},
+				},
+			},
+		},
+	)
+	return nil
+}
+
+func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
+	_whispers := []whispers.Whisper{}
+	ids := []string{}
+
+	for id, whisper := range whispers.Whispers.Whispers {
+		if whisper.Sender == ctx.EffectiveUser.Id {
+			_whispers = append(_whispers, whisper)
+			ids = append(ids, id)
+		}
+	}
+
+	if len(_whispers) == 0 {
+		ctx.CallbackQuery.Answer(
+			b,
+			&gotgbot.AnswerCallbackQueryOpts{
+				Text: "You don't have any whispers",
+			},
+		)
+	} else {
+		for _, id := range ids {
+			delete(whispers.Whispers.Whispers, id)
+		}
+
+		ctx.CallbackQuery.Answer(
+			b,
+			&gotgbot.AnswerCallbackQueryOpts{
+				Text: fmt.Sprintf("Removed %d whispers", len(_whispers)),
+			},
+		)
+		now := time.Now().UTC().String()
+		ctx.EffectiveMessage.EditText(
+			b,
+			"Your whispers has been removed at "+now,
+			nil,
+		)
+	}
+
 	return nil
 }
