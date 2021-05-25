@@ -41,6 +41,7 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 					InputMessageContent: gotgbot.InputTextMessageContent{
 						MessageText: "<b>Send whisper messages through inline mode</b>\n\n" +
 							fmt.Sprintf("Usage: <code>@%s [@username] text</code>", b.User.Username),
+						ParseMode: "HTML",
 					},
 					Description: fmt.Sprintf("Usage: @%s [@username] text", b.User.Username),
 					ThumbUrl:    "https://www.freeiconspng.com/uploads/whisper-icon-0.png",
