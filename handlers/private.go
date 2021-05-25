@@ -60,7 +60,7 @@ var (
 			}, {
 				gotgbot.InlineKeyboardButton{
 					Text:         "My Whispers",
-					CallbackData: "list_whispers",
+					CallbackData: "my_whispers",
 				},
 			},
 		},
@@ -131,19 +131,16 @@ func saveWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 
 func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 	_whispers, text := []whispers.Whisper{}, ""
-
 	for _, whisper := range whispers.Whispers.Whispers {
 		if whisper.Sender == ctx.EffectiveUser.Id {
 			_whispers = append(_whispers, whisper)
 		}
 	}
-
 	if len(_whispers) == 0 {
 		text = "You don't have any whispers"
 	} else {
 		text = fmt.Sprintf("You have %d whispers", len(_whispers))
 	}
-
 	ctx.EffectiveMessage.EditText(
 		b,
 		text,
@@ -153,7 +150,7 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 					{
 						gotgbot.InlineKeyboardButton{
 							Text:         "🗑 Delete My Whispers",
-							CallbackData: "delete_my_whispers",
+							CallbackData: "delete_whispers",
 						},
 					},
 					{
@@ -169,7 +166,7 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 	return nil
 }
 
-func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
+func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 	_whispers := []whispers.Whisper{}
 	ids := []string{}
 	for id, whisper := range whispers.Whispers.Whispers {
@@ -198,7 +195,7 @@ func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 		now := time.Now().UTC().String()
 		ctx.EffectiveMessage.EditText(
 			b,
-			"Your whispers has been removed at "+now,
+			fmt.Sprintf("Your whispers has been removed at <code>%s</code>", now),
 			&gotgbot.EditMessageTextOpts{
 				ReplyMarkup: *ctx.EffectiveMessage.ReplyMarkup,
 			},
