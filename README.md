@@ -14,6 +14,9 @@ Go version of [rojserbest/ezWhisperBot](https://github.com/rojserbest/ezWhisperB
 TOKEN=yourBotToken OWNER=yourTelegramUsername go run .
 ```
 
+## TODO
+- Save whispers on exit
+
 ### License
 
 AGPL-3.0-or-later
