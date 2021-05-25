@@ -30,7 +30,6 @@ import (
 
 func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.InlineQuery.Query
-
 	if query == "" || len(query) > 200 || len(strings.Fields(query)) < 2 {
 		ctx.InlineQuery.Answer(
 			b,
@@ -66,11 +65,9 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 		)
 		return nil
 	}
-
 	_username := strings.Fields(query)[0]
 	username := strings.TrimPrefix(_username, "@")
 	text := strings.Trim(query[len(_username)+1:], " ")
-
 	if username == "all" {
 		ctx.InlineQuery.Answer(
 			b,
@@ -122,6 +119,5 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 			&gotgbot.AnswerInlineQueryOpts{CacheTime: 0, IsPersonal: true},
 		)
 	}
-
 	return nil
 }

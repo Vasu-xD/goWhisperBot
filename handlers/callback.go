@@ -29,7 +29,6 @@ import (
 
 func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 	inlineMessageId := ctx.CallbackQuery.InlineMessageId
-
 	if whispers.Whispers.Whispers[inlineMessageId].Text == "" {
 		ctx.CallbackQuery.Answer(
 			b,
@@ -49,27 +48,30 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 		sender := whisper.Sender
 		receiver := whisper.Receiver
 		text := whisper.Text
-
-		if receiver == "all" || strings.EqualFold(ctx.EffectiveUser.Username, receiver) {
+		if ctx.EffectiveUser.Id == sender {
 			ctx.CallbackQuery.Answer(
 				b,
 				&gotgbot.AnswerCallbackQueryOpts{
 					Text:      text,
 					ShowAlert: true,
 				})
-			_, err := b.EditMessageText(fmt.Sprintf("🔓 %s read the message", ctx.EffectiveUser.FirstName), &gotgbot.EditMessageTextOpts{InlineMessageId: ctx.CallbackQuery.InlineMessageId})
-
+		} else if receiver == "all" || strings.EqualFold(ctx.EffectiveUser.Username, receiver) {
+			ctx.CallbackQuery.Answer(
+				b,
+				&gotgbot.AnswerCallbackQueryOpts{
+					Text:      text,
+					ShowAlert: true,
+				})
+			_, err := b.EditMessageText(
+				fmt.Sprintf("🔓 %s read the message", ctx.EffectiveUser.FirstName),
+				&gotgbot.EditMessageTextOpts{
+					InlineMessageId: ctx.CallbackQuery.InlineMessageId,
+				},
+			)
 			if err != nil {
 				panic(err.Error())
 			}
 			delete(whispers.Whispers.Whispers, inlineMessageId)
-		} else if ctx.EffectiveUser.Id == sender {
-			ctx.CallbackQuery.Answer(
-				b,
-				&gotgbot.AnswerCallbackQueryOpts{
-					Text:      text,
-					ShowAlert: true,
-				})
 		} else {
 			ctx.CallbackQuery.Answer(
 				b,
@@ -79,6 +81,5 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 				})
 		}
 	}
-
 	return nil
 }

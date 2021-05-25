@@ -172,14 +172,12 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 	_whispers := []whispers.Whisper{}
 	ids := []string{}
-
 	for id, whisper := range whispers.Whispers.Whispers {
 		if whisper.Sender == ctx.EffectiveUser.Id {
 			_whispers = append(_whispers, whisper)
 			ids = append(ids, id)
 		}
 	}
-
 	if len(_whispers) == 0 {
 		ctx.CallbackQuery.Answer(
 			b,
@@ -191,7 +189,6 @@ func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 		for _, id := range ids {
 			delete(whispers.Whispers.Whispers, id)
 		}
-
 		ctx.CallbackQuery.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
@@ -207,6 +204,5 @@ func deleteMyWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		)
 	}
-
 	return nil
 }

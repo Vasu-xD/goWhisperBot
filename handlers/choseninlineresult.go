@@ -28,21 +28,17 @@ import (
 
 func chosenInlineResult(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.ChosenInlineResult.Query
-
 	if len(strings.Fields(query)) == 0 || len(query) > 200 {
 		return nil
 	}
-
 	_username := strings.Fields(query)[0]
 	username := strings.TrimPrefix(_username, "@")
 	text := strings.Trim(query[len(_username)+1:], " ")
 	inlineMessageId := ctx.ChosenInlineResult.InlineMessageId
-
 	whispers.Whispers.Whispers[inlineMessageId] = whispers.Whisper{
 		Sender:   ctx.ChosenInlineResult.From.Id,
 		Receiver: username,
 		Text:     text,
 	}
-
 	return nil
 }

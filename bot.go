@@ -35,22 +35,16 @@ func main() {
 		GetTimeout:  gotgbot.DefaultGetTimeout,
 		PostTimeout: gotgbot.DefaultPostTimeout,
 	})
-
 	if err != nil {
 		panic(err)
 	}
-
 	updater := ext.NewUpdater(nil)
 	dispatcher := updater.Dispatcher
-
 	handlers.AddHandlers(dispatcher)
-
 	err = updater.StartPolling(b, &ext.PollingOpts{DropPendingUpdates: true})
-
 	if err != nil {
 		panic(err)
 	}
-
 	whispers.InitWhispers()
 	updater.Idle()
 }
