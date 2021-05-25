@@ -32,8 +32,8 @@ import (
 
 const (
 	defaultText = "This bot allows you to send whisper messages, " +
-		"works only in inline mode\n\n" +
-		"<a href=\"https://github.com/rojserbest/ezWhisperBot\">Source Code</a>" +
+		"works only in inline mode.\n\n" +
+		"<a href=\"https://github.com/rojserbest/goWhisperBot\">Source Code</a>" +
 		" | <a href=\"https://t.me/rojserbest\">Developer</a>" +
 		" | <a href=\"https://t.me/ezupdev\">Support Chat</a>"
 	learnText = "This bot works only in inline mode, a example use would be like " +
