@@ -38,10 +38,11 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 				ShowAlert: true,
 			},
 		)
-		ctx.EffectiveMessage.EditText(
-			b,
+		b.EditMessageText(
 			"⛔ invalid whisper",
-			&gotgbot.EditMessageTextOpts{},
+			&gotgbot.EditMessageTextOpts{
+				InlineMessageId: ctx.CallbackQuery.InlineMessageId,
+			},
 		)
 	} else {
 		whisper := whispers.Whispers.Whispers[inlineMessageId]
@@ -56,11 +57,11 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 					Text:      text,
 					ShowAlert: true,
 				})
-			ctx.EffectiveMessage.EditText(
-				b,
-				fmt.Sprintf("🔓 %s read the message", ctx.EffectiveUser.FirstName),
-				&gotgbot.EditMessageTextOpts{},
-			)
+			_, err := b.EditMessageText(fmt.Sprintf("🔓 %s read the message", ctx.EffectiveUser.FirstName), &gotgbot.EditMessageTextOpts{InlineMessageId: ctx.CallbackQuery.InlineMessageId})
+
+			if err != nil {
+				panic(err.Error())
+			}
 			delete(whispers.Whispers.Whispers, inlineMessageId)
 		} else if ctx.EffectiveUser.Id == sender {
 			ctx.CallbackQuery.Answer(
