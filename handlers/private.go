@@ -197,6 +197,7 @@ func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 			b,
 			fmt.Sprintf("Your whispers has been removed at <code>%s</code>", now),
 			&gotgbot.EditMessageTextOpts{
+				ParseMode:   "HTML",
 				ReplyMarkup: *ctx.EffectiveMessage.ReplyMarkup,
 			},
 		)
