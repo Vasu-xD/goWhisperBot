@@ -11,7 +11,7 @@ Go version of [rojserbest/ezWhisperBot](https://github.com/rojserbest/ezWhisperB
 ### Run the bot
 
 ```
-TOKEN=yourBotToken OWNER=yourTelegramUsername go run .
+TOKEN=yourBotToken go run .
 ```
 
 ## TODO
