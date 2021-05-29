@@ -16,9 +16,6 @@ $ export DB_URI=mongodb(+srv)://user:pass@host(/database)(?key=value)
 $ go run .
 ```
 
-## TODO
-- Save whispers on exit
-
 ### License
 
 AGPL-3.0-or-later
