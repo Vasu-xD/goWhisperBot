@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"os"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,7 +19,7 @@ func GetClient() *mongo.Client {
 	if Client != nil {
 		return Client
 	}
-	Client, err = mongo.NewClient(options.Client().ApplyURI("mongodb://127.0.0.1:27017"))
+	Client, err = mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URI")))
 	if err != nil {
 		panic(err)
 	}
