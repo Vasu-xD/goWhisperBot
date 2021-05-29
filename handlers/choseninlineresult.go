@@ -19,7 +19,7 @@
 package handlers
 
 import (
-	"goWhisperBot/whispers"
+	"goWhisperBot/mongo"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -35,10 +35,11 @@ func chosenInlineResult(b *gotgbot.Bot, ctx *ext.Context) error {
 	username := strings.TrimPrefix(_username, "@")
 	text := strings.Trim(query[len(_username)+1:], " ")
 	inlineMessageId := ctx.ChosenInlineResult.InlineMessageId
-	whispers.Whispers.Whispers[inlineMessageId] = whispers.Whisper{
+	mongo.SaveWhisper(mongo.Whisper{
+		Id:       inlineMessageId,
 		Sender:   ctx.ChosenInlineResult.From.Id,
 		Receiver: username,
 		Text:     text,
-	}
+	})
 	return nil
 }

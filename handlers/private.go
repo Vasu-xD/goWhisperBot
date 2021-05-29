@@ -20,10 +20,9 @@ package handlers
 
 import (
 	"fmt"
-	"os"
 	"time"
 
-	"goWhisperBot/whispers"
+	"goWhisperBot/mongo"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -120,26 +119,12 @@ func back(b *gotgbot.Bot, ctx *ext.Context) error {
 	return nil
 }
 
-func saveWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
-	if strings.EqualFold(ctx.EffectiveMessage.From.Username, os.Getenv("SUDO")) {
-		return nil
-	}
-
-	whispers.SaveWhispers()
-	return nil
-}
-
 func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
-	_whispers, text := []whispers.Whisper{}, ""
-	for _, whisper := range whispers.Whispers.Whispers {
-		if whisper.Sender == ctx.EffectiveUser.Id {
-			_whispers = append(_whispers, whisper)
-		}
-	}
-	if len(_whispers) == 0 {
+	result, text := mongo.GetWhispersCount(ctx.EffectiveUser.Id), ""
+	if result == 0 {
 		text = "You don't have any whispers"
 	} else {
-		text = fmt.Sprintf("You have %d whispers", len(_whispers))
+		text = fmt.Sprintf("You have %d whispers", result)
 	}
 	ctx.EffectiveMessage.EditText(
 		b,
@@ -167,15 +152,8 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
-	_whispers := []whispers.Whisper{}
-	ids := []string{}
-	for id, whisper := range whispers.Whispers.Whispers {
-		if whisper.Sender == ctx.EffectiveUser.Id {
-			_whispers = append(_whispers, whisper)
-			ids = append(ids, id)
-		}
-	}
-	if len(_whispers) == 0 {
+	result := mongo.DeleteWhispers(ctx.EffectiveUser.Id)
+	if result == 0 {
 		ctx.CallbackQuery.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
@@ -183,13 +161,10 @@ func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		)
 	} else {
-		for _, id := range ids {
-			delete(whispers.Whispers.Whispers, id)
-		}
 		ctx.CallbackQuery.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
-				Text: fmt.Sprintf("Removed %d whispers", len(_whispers)),
+				Text: fmt.Sprintf("Removed %d whispers", result),
 			},
 		)
 		now := time.Now().UTC().String()

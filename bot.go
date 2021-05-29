@@ -19,11 +19,9 @@
 package main
 
 import (
+	"goWhisperBot/handlers"
 	"net/http"
 	"os"
-
-	"goWhisperBot/handlers"
-	"goWhisperBot/whispers"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
@@ -45,6 +43,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	whispers.InitWhispers()
 	updater.Idle()
 }

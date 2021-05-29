@@ -20,7 +20,7 @@ package handlers
 
 import (
 	"fmt"
-	"goWhisperBot/whispers"
+	"goWhisperBot/mongo"
 	"strings"
 
 	"github.com/PaulSonOfLars/gotgbot/v2"
@@ -28,8 +28,8 @@ import (
 )
 
 func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
-	inlineMessageId := ctx.CallbackQuery.InlineMessageId
-	if whispers.Whispers.Whispers[inlineMessageId].Text == "" {
+	result := mongo.GetWhisper(ctx.CallbackQuery.InlineMessageId)
+	if result == (mongo.Whisper{}) {
 		ctx.CallbackQuery.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
@@ -44,10 +44,9 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		)
 	} else {
-		whisper := whispers.Whispers.Whispers[inlineMessageId]
-		sender := whisper.Sender
-		receiver := whisper.Receiver
-		text := whisper.Text
+		sender := result.Sender
+		receiver := result.Receiver
+		text := result.Text
 		if ctx.EffectiveUser.Id == sender {
 			ctx.CallbackQuery.Answer(
 				b,
@@ -71,7 +70,7 @@ func showWhisper(b *gotgbot.Bot, ctx *ext.Context) error {
 			if err != nil {
 				panic(err.Error())
 			}
-			delete(whispers.Whispers.Whispers, inlineMessageId)
+			mongo.DeleteWhisper(ctx.CallbackQuery.InlineMessageId)
 		} else {
 			ctx.CallbackQuery.Answer(
 				b,
