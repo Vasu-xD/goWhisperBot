@@ -1,6 +1,6 @@
 ## goWhisperBot
 
-Go version of [dashezup/ezWhisperBot](https://github.com/dashezup/ezWhisperBot.
+Go version of [dashezup/ezWhisperBot](https://github.com/dashezup/ezWhisperBot).
 
 ### Requirements
 
