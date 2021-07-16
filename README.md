@@ -12,7 +12,7 @@ Go version of [dashezup/ezWhisperBot](https://github.com/dashezup/ezWhisperBot).
 
 ```
 $ export BOT_TOKEN=1234567890
-$ export DB_URI=mongodb(+srv)://user:pass@host(/database)(?key=value)
+$ export DB_URI=mongodb(+srv)://user:pass@host(/whisper_bot)(?key=value)
 $ go run .
 ```
 
