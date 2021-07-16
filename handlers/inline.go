@@ -1,5 +1,5 @@
 /**
- * ezWhisperBot - A Telegram bot for sending whisper messages
+ * goWhisperBot - A Telegram bot for sending whisper messages
  * Copyright (C) 2021  Roj Serbest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -30,6 +30,7 @@ import (
 
 func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.InlineQuery.Query
+
 	if query == "" || len(query) > 200 || len(strings.Fields(query)) < 2 {
 		ctx.InlineQuery.Answer(
 			b,
@@ -62,11 +63,14 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 				IsPersonal:        true,
 			},
 		)
+
 		return nil
 	}
+
 	_username := strings.Fields(query)[0]
 	username := strings.TrimPrefix(_username, "@")
 	text := strings.Trim(query[len(_username)+1:], " ")
+
 	if username == "all" {
 		ctx.InlineQuery.Answer(
 			b,
@@ -75,7 +79,7 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 					Id:    uuid.NewV4().String(),
 					Title: "👁️ Whisper once to the first one who open it",
 					InputMessageContent: gotgbot.InputTextMessageContent{
-						MessageText: "👁️ The first one who open the whisper can read it",
+						MessageText: "👁️ The first one who opens the whisper can read it",
 					},
 					Description: fmt.Sprintf("🤫 %s", text),
 					ReplyMarkup: &gotgbot.InlineKeyboardMarkup{
@@ -83,7 +87,7 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 							{
 								gotgbot.InlineKeyboardButton{
 									Text:         "👁️ show message",
-									CallbackData: "show_whisper",
+									CallbackData: "showWhisper",
 								},
 							},
 						},
@@ -92,31 +96,34 @@ func inline(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 			&gotgbot.AnswerInlineQueryOpts{CacheTime: 0, IsPersonal: true},
 		)
-	} else {
-		ctx.InlineQuery.Answer(
-			b,
-			[]gotgbot.InlineQueryResult{
-				gotgbot.InlineQueryResultArticle{
-					Id:    uuid.NewV4().String(),
-					Title: fmt.Sprintf("🔒 A whisper message to @%s", username),
-					InputMessageContent: gotgbot.InputTextMessageContent{
-						MessageText: fmt.Sprintf("🔒 A whisper message to @%s", username),
-					},
-					Description: text,
-					ReplyMarkup: &gotgbot.InlineKeyboardMarkup{
-						InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
-							{
-								gotgbot.InlineKeyboardButton{
-									Text:         "👁️ show message",
-									CallbackData: "show_whisper",
-								},
-							},
-						},
-					},
-				},
-			},
-			&gotgbot.AnswerInlineQueryOpts{CacheTime: 0, IsPersonal: true},
-		)
+
+		return nil
 	}
+
+	ctx.InlineQuery.Answer(
+		b,
+		[]gotgbot.InlineQueryResult{
+			gotgbot.InlineQueryResultArticle{
+				Id:    uuid.NewV4().String(),
+				Title: fmt.Sprintf("🔒 A whisper message to @%s", username),
+				InputMessageContent: gotgbot.InputTextMessageContent{
+					MessageText: fmt.Sprintf("🔒 A whisper message to @%s", username),
+				},
+				Description: text,
+				ReplyMarkup: &gotgbot.InlineKeyboardMarkup{
+					InlineKeyboard: [][]gotgbot.InlineKeyboardButton{
+						{
+							gotgbot.InlineKeyboardButton{
+								Text:         "👁️ show message",
+								CallbackData: "showWhisper",
+							},
+						},
+					},
+				},
+			},
+		},
+		&gotgbot.AnswerInlineQueryOpts{CacheTime: 0, IsPersonal: true},
+	)
+
 	return nil
 }

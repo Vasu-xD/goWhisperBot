@@ -1,5 +1,5 @@
 /**
- * ezWhisperBot - A Telegram bot for sending whisper messages
+ * goWhisperBot - A Telegram bot for sending whisper messages
  * Copyright (C) 2021  Roj Serbest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -21,16 +21,16 @@ package handlers
 import (
 	"github.com/PaulSonOfLars/gotgbot/v2/ext"
 	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers"
-	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters"
+	"github.com/PaulSonOfLars/gotgbot/v2/ext/handlers/filters/callbackquery"
 )
 
 func AddHandlers(dp *ext.Dispatcher) {
 	dp.AddHandler(handlers.NewCommand("start", start))
-	dp.AddHandler(handlers.NewCallback(filters.Equal("start"), back))
-	dp.AddHandler(handlers.NewCallback(filters.Equal("learn_next"), back))
-	dp.AddHandler(handlers.NewCallback(filters.Equal("show_whisper"), showWhisper))
-	dp.AddHandler(handlers.NewCallback(filters.Equal("my_whispers"), myWhispers))
-	dp.AddHandler(handlers.NewCallback(filters.Equal("delete_whispers"), deleteWhispers))
 	dp.AddHandler(handlers.NewInlineQuery(nil, inline))
-	dp.AddHandler(NewChosenInlineResult(chosenInlineResult))
+	dp.AddHandler(handlers.NewChosenInlineResult(nil, chosenInlineResult))
+	dp.AddHandler(handlers.NewCallback(callbackquery.Equal("start"), back))
+	dp.AddHandler(handlers.NewCallback(callbackquery.Equal("learnNext"), back))
+	dp.AddHandler(handlers.NewCallback(callbackquery.Equal("whispers"), myWhispers))
+	dp.AddHandler(handlers.NewCallback(callbackquery.Equal("listWhispers"), listWhispers))
+	dp.AddHandler(handlers.NewCallback(callbackquery.Equal("deleteWhispers"), deleteWhispers))
 }

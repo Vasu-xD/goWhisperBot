@@ -1,12 +1,12 @@
-## ezWhisperBot
+## goWhisperBot
 
-Go version of [rojserbest/ezWhisperBot](https://github.com/rojserbest/ezWhisperBot) and my first Go bot.
+Go version of [dashezup/ezWhisperBot](https://github.com/dashezup/ezWhisperBot.
 
 ### Requirements
 
 - Golang
 - A Telegram bot created with [@BotFather](https://t.me/BotFather)
-    with "inline mode" and "inline feedback" enabled
+  with "inline mode" and "inline feedback" enabled
 
 ### Run the bot
 
@@ -21,7 +21,7 @@ $ go run .
 AGPL-3.0-or-later
 
 ```
-ezWhisperBot - A Telegram bot for sending whisper messages
+goWhisperBot - A Telegram bot for sending whisper messages
 Copyright (C) 2021  Roj Serbest
 
 This program is free software: you can redistribute it and/or modify

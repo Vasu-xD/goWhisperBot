@@ -2,6 +2,7 @@ package mongo
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"time"
 
@@ -19,15 +20,22 @@ func GetClient() *mongo.Client {
 	if Client != nil {
 		return Client
 	}
+
 	Client, err = mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URI")))
+
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
 	Ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
 	err = Client.Connect(Ctx)
+
 	if err != nil {
-		panic(err)
+		fmt.Println(err)
+		os.Exit(1)
 	}
+
 	return Client
 }
 

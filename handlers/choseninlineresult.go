@@ -1,5 +1,5 @@
 /**
- * ezWhisperBot - A Telegram bot for sending whisper messages
+ * goWhisperBot - A Telegram bot for sending whisper messages
  * Copyright (C) 2021  Roj Serbest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -28,18 +28,20 @@ import (
 
 func chosenInlineResult(b *gotgbot.Bot, ctx *ext.Context) error {
 	query := ctx.ChosenInlineResult.Query
+
 	if len(strings.Fields(query)) == 0 || len(query) > 200 {
 		return nil
 	}
+
 	_username := strings.Fields(query)[0]
 	username := strings.TrimPrefix(_username, "@")
 	text := strings.Trim(query[len(_username)+1:], " ")
 	inlineMessageId := ctx.ChosenInlineResult.InlineMessageId
-	mongo.SaveWhisper(mongo.Whisper{
+
+	return mongo.SaveWhisper(mongo.Whisper{
 		Id:       inlineMessageId,
 		Sender:   ctx.ChosenInlineResult.From.Id,
 		Receiver: username,
 		Text:     text,
 	})
-	return nil
 }

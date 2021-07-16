@@ -1,5 +1,5 @@
 /**
- * ezWhisperBot - A Telegram bot for sending whisper messages
+ * goWhisperBot - A Telegram bot for sending whisper messages
  * Copyright (C) 2021  Roj Serbest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,9 +38,9 @@ const (
 	learnText = "This bot works only in inline mode, a example use would be like " +
 		"this:\n\n" +
 		"- Write a whisper to @username\n" +
-		"<code>@ezWhisperBot @username some text here</code>\n\n" +
+		"<code>@%s @username some text here</code>\n\n" +
 		"- Whisper to the first one who open it (can also be used in PM)\n" +
-		"<code>@ezWhisperBot some text here</code>\n\n" +
+		"<code>@%s some text here</code>\n\n" +
 		"If the username is <code>@all</code>, anyone who open the whisper first can read it."
 )
 
@@ -59,7 +59,7 @@ var (
 			}, {
 				gotgbot.InlineKeyboardButton{
 					Text:         "My Whispers",
-					CallbackData: "my_whispers",
+					CallbackData: "listWhispers",
 				},
 			},
 		},
@@ -69,7 +69,7 @@ var (
 			{
 				gotgbot.InlineKeyboardButton{
 					Text:         "Next",
-					CallbackData: "learn_next",
+					CallbackData: "learnNext",
 				},
 			},
 		},
@@ -80,7 +80,11 @@ func start(b *gotgbot.Bot, ctx *ext.Context) error {
 	text, replyMarkup := defaultText, defaultReplyMarkup
 
 	if strings.HasSuffix(ctx.EffectiveMessage.Text, "learn") {
-		text, replyMarkup = learnText, learnReplyMarkup
+		text, replyMarkup = fmt.Sprintf(
+			learnText,
+			b.User.Username,
+			b.User.Username,
+		), learnReplyMarkup
 	}
 
 	ctx.EffectiveMessage.Reply(
@@ -107,7 +111,7 @@ func back(b *gotgbot.Bot, ctx *ext.Context) error {
 		},
 	)
 
-	if ctx.CallbackQuery.Data == "learn_next" {
+	if ctx.CallbackQuery.Data == "learnNext" {
 		ctx.CallbackQuery.Answer(
 			b,
 			&gotgbot.AnswerCallbackQueryOpts{
@@ -120,12 +124,20 @@ func back(b *gotgbot.Bot, ctx *ext.Context) error {
 }
 
 func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
-	result, text := mongo.GetWhispersCount(ctx.EffectiveUser.Id), ""
+	result, err := mongo.GetWhispersCount(ctx.EffectiveUser.Id)
+
+	if err != nil {
+		return err
+	}
+
+	text := ""
+
 	if result == 0 {
 		text = "You don't have any whispers"
 	} else {
 		text = fmt.Sprintf("You have %d whispers", result)
 	}
+
 	ctx.EffectiveMessage.EditText(
 		b,
 		text,
@@ -135,7 +147,7 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 					{
 						gotgbot.InlineKeyboardButton{
 							Text:         "🗑 Delete My Whispers",
-							CallbackData: "delete_whispers",
+							CallbackData: "deleteWhispers",
 						},
 					},
 					{
@@ -148,11 +160,17 @@ func myWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		},
 	)
+
 	return nil
 }
 
 func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
-	result := mongo.DeleteWhispers(ctx.EffectiveUser.Id)
+	result, err := mongo.DeleteWhispers(ctx.EffectiveUser.Id)
+
+	if err != nil {
+		return err
+	}
+
 	if result == 0 {
 		ctx.CallbackQuery.Answer(
 			b,
@@ -167,6 +185,7 @@ func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 				Text: fmt.Sprintf("Removed %d whispers", result),
 			},
 		)
+
 		now := time.Now().UTC().String()
 		ctx.EffectiveMessage.EditText(
 			b,
@@ -177,5 +196,6 @@ func deleteWhispers(b *gotgbot.Bot, ctx *ext.Context) error {
 			},
 		)
 	}
+
 	return nil
 }

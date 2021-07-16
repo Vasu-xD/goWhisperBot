@@ -1,5 +1,5 @@
 /**
- * ezWhisperBot - A Telegram bot for sending whisper messages
+ * goWhisperBot - A Telegram bot for sending whisper messages
  * Copyright (C) 2021  Roj Serbest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -38,30 +38,33 @@ func getCollection() *mongo.Collection {
 	if collection != nil {
 		return collection
 	}
+
 	collection = GetDatabase().Collection("whispers")
 	return collection
 }
 
-func SaveWhisper(whisper Whisper) {
-	getCollection().InsertOne(Ctx, whisper)
+func SaveWhisper(whisper Whisper) error {
+	_, err := getCollection().InsertOne(Ctx, whisper)
+	return err
 }
 
-func GetWhisper(id string) Whisper {
-	var result Whisper
-	getCollection().FindOne(Ctx, bson.M{"id": id}).Decode(&result)
-	return result
+func GetWhisper(id string) (Whisper, error) {
+	result := Whisper{}
+	err := getCollection().FindOne(Ctx, bson.M{"id": id}).Decode(&result)
+	return result, err
 }
 
-func GetWhispersCount(sender int64) int64 {
-	count, _ := getCollection().CountDocuments(Ctx, bson.M{"sender": sender})
-	return count
+func GetWhispersCount(sender int64) (int64, error) {
+	count, err := getCollection().CountDocuments(Ctx, bson.M{"sender": sender})
+	return count, err
 }
 
-func DeleteWhisper(id string) {
-	getCollection().DeleteOne(Ctx, bson.M{"id": id})
+func DeleteWhisper(id string) error {
+	_, err := getCollection().DeleteOne(Ctx, bson.M{"id": id})
+	return err
 }
 
-func DeleteWhispers(sender int64) int64 {
-	result, _ := getCollection().DeleteMany(Ctx, bson.M{"sender": sender})
-	return result.DeletedCount
+func DeleteWhispers(sender int64) (int64, error) {
+	result, err := getCollection().DeleteMany(Ctx, bson.M{"sender": sender})
+	return result.DeletedCount, err
 }
