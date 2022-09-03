@@ -1,1 +1,1 @@
-worker: bin/GoWhisperBot
+worker: bin/goWhisperBot
