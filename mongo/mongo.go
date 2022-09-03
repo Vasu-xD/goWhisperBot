@@ -16,28 +16,20 @@ var (
 	err    error
 )
 
-func GetClient() *mongo.Client {
-	if Client != nil {
-		return Client
-	}
 
-	Client, err = mongo.NewClient(options.Client().ApplyURI(os.Getenv("DB_URI")))
 
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
 
-	Ctx, _ = context.WithTimeout(context.Background(), 10*time.Second)
-	err = Client.Connect(Ctx)
-
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
-
-	return Client
+serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
+clientOptions := options.Client().
+    ApplyURI("mongodb+srv://vasu:vasu@cluster0.3gnlkhi.mongodb.net/?retryWrites=true&w=majority").
+    SetServerAPIOptions(serverAPIOptions)
+ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+defer cancel()
+client, err := mongo.Connect(ctx, clientOptions)
+if err != nil {
+    log.Fatal(err)
 }
+
 
 func GetDatabase() *mongo.Database {
 	return GetClient().Database("whisper_bot")
