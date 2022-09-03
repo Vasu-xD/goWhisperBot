@@ -1,23 +1,5 @@
-package mongo
 
-import (
-	"context"
-	"fmt"
-	"os"
-	"time"
-
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
-)
-
-var (
-	Client *mongo.Client
-	Ctx    context.Context
-	err    error
-)
-
-
-
+import "go.mongodb.org/mongo-driver/mongo"
 
 serverAPIOptions := options.ServerAPI(options.ServerAPIVersion1)
 clientOptions := options.Client().
@@ -28,9 +10,4 @@ defer cancel()
 client, err := mongo.Connect(ctx, clientOptions)
 if err != nil {
     log.Fatal(err)
-}
-
-
-func GetDatabase() *mongo.Database {
-	return GetClient().Database("whisper_bot")
 }
